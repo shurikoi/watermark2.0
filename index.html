@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="loader-wrapper">
+        <!-- <div class="loader"></div> -->
+    </div>
+    <div class="container">
+        <header class="app-header">
+            <div class="header-text">Накладання логотипу на зображення</div>
+            <img class="header-img" src="imgs/logo-white.png">
+        </header>
+        <main class="app-main">
+            <div class="settings">
+                <div class="files-wrapper">
+                    <div class="choose-files blue-button button big-button">Вибiр зображення</div>
+                    <div class="choosen-files">Вибрано файлiв <span>0</span></div>
+                </div>
+                <div class="logo-choose">
+                    <div class="logo-choose-header">Вибiр логотипу</div>
+                    <div class="logos">
+                        <div class="logo-item logo-1"><img src="imgs/logo.png" alt=""></div>
+                        <div class="logo-item logo-2"><img src="imgs/logo-en.png" alt=""></div>
+                        <div class="logo-item logo-3"><img src="imgs/logo-white.png" alt=""></div>
+                    </div>
+                </div>
+                <div class="path-choose">
+                    <div class="path-choose-header">Завантаження зображень</div>
+                    <div class="file-path">(C:)\Download</div>
+                    <div class="choose-path-button blue-button button small-button">Огляд...</div>
+                </div>
+                <div class="process-button gray-button button small-button">Обробка</div>
+                <div class="toggle-button-wrapper">
+                    <input type="checkbox" class="toggle-button">
+                </div>
+            </div>
+            <div class="demo-wrapper">
+                <img src="imgs/collection-tour.svg" alt="" class="demo-img">
+            </div>
+        </main>
+        <div class="progress-bar"></div>
+    </div>
+    <script src="renderer.js"></script>
+</body>
+
+</html>

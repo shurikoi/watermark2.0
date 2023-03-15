@@ -1,0 +1,232 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body,
+html {
+    height: 100%;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    color: #313131;
+    transition: .25s color;
+}
+
+body.dark-mode {
+    color: #FFFFFF;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.app-header {
+    display: flex;
+    align-items: center;
+    height: 146px;
+    font-size: 25px;
+    font-weight: 400;
+    gap: 10px;
+    padding-left: 40px;
+    background-color: #7E3DAB;
+    color: #FFFFFF;
+    transition: .25s background-color;
+}
+
+.dark-mode .app-header {
+    background-color: #371C66;
+}
+
+.app-main {
+    display: flex;
+    padding: 45px 0 45px 40px;
+    gap: 20px;
+    height: 100%;
+    background-color: #EBEBEB;
+    transition: .25s background-color;
+}
+
+.dark-mode .app-main {
+    background-color: #24292E;
+}
+
+.settings {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 370px;
+    max-width: 370px;
+    overflow: hidden;
+}
+
+.files-wrapper{
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.logos {
+    margin-top: 4px;
+    display: flex;
+}
+
+.logos .logo-item {
+    border: 1px solid #D3D3D3;
+    width: 80px;
+    height: 80px;
+}
+
+.logos .logo-item:not(:nth-child(1)) {
+    margin-left: -1px;
+}
+
+.logos .logo-item img {
+    height: 100%;
+}
+
+.app-header .header-img {
+    height: 52px;
+}
+
+.button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 3px;
+    padding: 3px 6px;
+    color: white;
+    cursor: pointer;
+}
+
+.big-button {
+    width: 148px;
+    height: 33px;
+}
+
+.small-button {
+    width: 77px;
+    height: 23px;
+}
+
+.path-choose {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+}
+
+.path-choose .file-path {
+    color: #969494;
+}
+
+
+.color-black {
+    color: #313131;
+}
+
+.color-gray {
+    color: #969494;
+}
+
+.blue-button {
+    background-color: #0D99FF;
+}
+
+.dark-mode .blue-button {
+    background-color: #364253;
+}
+
+.gray-button {
+    background-color: #6F6F6F;
+}
+
+.dark-mode .gray-button {
+    background-color: #5b3d6a;
+}
+
+.demo-wrapper {
+    display: flex;
+    justify-content: center;
+    width: 466px;
+    height: 340px;
+}
+
+.demo-wrapper img {
+    width: auto;
+    height: 100%;
+    border: 3px dashed #5f4194;
+    border-radius: 10px;
+    /* rgb(34, 78, 114) */
+}
+
+.progress-bar {
+    height: 19px;
+    background-color: #D9D9D9;
+}
+
+.toggle-button {
+    position: relative;
+    width: 40px;
+    height: 16px;
+    background-color: black;
+    border-radius: 20px;
+    appearance: none;
+    transition: .25s;
+    cursor: pointer;
+}
+
+.toggle-button:checked {
+    background-color: white;
+}
+
+.toggle-button::after {
+    content: "";
+    position: absolute;
+    background-color: white;
+    top: 3px;
+    left: 3px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    transition: .25s;
+}
+
+.toggle-button:checked::after {
+    left: 27px;
+    background-color: black;
+}
+
+.loader-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: white;
+    z-index: 2;
+}
+
+.loader{
+    width: 30px;
+    height: 30px;
+    border: 3px solid transparent;
+    border-top-color: #0D99FF;
+    border-radius: 50%;
+    animation: rotation 1s infinite;
+}
+
+@keyframes rotation{
+    0%{
+        transform: rotate(0deg);
+    }
+    100%{
+        transform: rotate(360deg);
+    }
+}
