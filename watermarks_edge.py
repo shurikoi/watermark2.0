@@ -89,11 +89,10 @@ def main():
 
     folder = glob.glob(f'{path_folder_img}/*.*')
 
-    name = iter(range(len(folder)))
-
     for path_img in folder:
+        name = path_img.split(r" \ ".strip())[-1]
         save_path = arguments[3]
-        save_path = fr"{save_path}\{next(name)}.JPG"
+        save_path = fr"{save_path}\logo_{name}"
 
         convert_function(path_img, path_logo, save_path, location, bias_)
 
