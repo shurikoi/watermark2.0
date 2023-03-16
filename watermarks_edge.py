@@ -78,7 +78,9 @@ def convert_function(path_img_: str, path_logo_: str, path_save_: str, location_
     dst = cv.add(img_bg, logo_fg)
     img[y:rows_2, x:cols_2] = dst
 
-    cv.imwrite(path_save_, img)
+    ext = '.' + path_save_.split('.')[-1]
+    temp = cv.imencode(ext=ext, img=img)
+    temp[1].tofile(path_save_)
 
 
 def main():
