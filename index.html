@@ -14,19 +14,26 @@
     </div>
     <div class="container">
         <header class="app-header">
-            <div class="header-text">Накладання логотипу на зображення</div>
-            <img class="header-img" src="imgs/logo-white.png">
+            <div class="toggle-button-wrapper">
+                <img src="imgs/moon.png" alt="" class="moon-img toggle-button-img">
+                <img src="imgs/sun.png" alt="" class="sun-img toggle-button-img">
+                <input type="checkbox" class="toggle-button">
+            </div>
+            <div class="header-text-wrapper">
+                <div class="header-text">Накладання логотипу на зображення</div>
+                <img class="header-img" src="imgs/logo-white.png">
+            </div>
         </header>
         <main class="app-main">
             <div class="settings">
                 <div class="files-wrapper">
-                    <div class="choose-files blue-button button big-button">Вибiр зображення</div>
                     <div class="choosen-files">Вибрано файлiв <span>0</span></div>
+                    <div class="clear-files hidden">x</div>
                 </div>
                 <div class="logo-choose">
                     <div class="logo-choose-header">Вибiр логотипу</div>
                     <div class="logos">
-                        <div class="logo-item logo-1"><img src="imgs/logo.png" alt=""></div>
+                        <div class="logo-item logo-1 choosen-logo"><img src="imgs/logo.png" alt=""></div>
                         <div class="logo-item logo-2"><img src="imgs/logo-en.png" alt=""></div>
                         <div class="logo-item logo-3"><img src="imgs/logo-white.png" alt=""></div>
                     </div>
@@ -37,12 +44,14 @@
                     <div class="choose-path-button blue-button button small-button">Огляд...</div>
                 </div>
                 <div class="process-button gray-button button small-button">Обробка</div>
-                <div class="toggle-button-wrapper">
-                    <input type="checkbox" class="toggle-button">
-                </div>
+                
             </div>
-            <div class="demo-wrapper">
-                <img src="imgs/collection-tour.svg" alt="" class="demo-img">
+            <div class="demo-wrapper demo-border ">
+                <img src="" alt="" class="demo-img">
+                <div class="choose-files-button-wrapper">
+                    <div class="choose-files blue-button button big-button">Вибiр зображення</div>
+                    <div class="choose-files-text">або перетягніть файли сюди (.png, .jpg)</div>
+                </div>
             </div>
         </main>
         <div class="progress-bar"></div>

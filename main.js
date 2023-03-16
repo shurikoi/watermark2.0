@@ -20,15 +20,17 @@ const createWindow = () => {
   
   ipcMain.on("choose-files", () => {
     dialog.showOpenDialog({properties: ["openFile", "multiSelections"]}).then((result) => {
-      console.log(result.filePaths)
-      win.webContents.send("choosen-files", result.filePaths)
+      console.log(result)
+      if (result.filePaths.length > 0)
+        win.webContents.send("choosen-files", result.filePaths)
     })
   })
   
   ipcMain.on("choose-folder", () => {
     dialog.showOpenDialog({properties: ["openDirectory"]}).then((result) => {
       console.log(result.filePaths)
-      win.webContents.send("folder-path", result.filePaths)
+      if (result.filePaths.length > 0)
+        win.webContents.send("folder-path", result.filePaths)
     })
   })
 
