@@ -3,9 +3,6 @@ import numpy as np
 import sys
 
 
-# from test_data import *
-
-
 def type_img(list_x: list, list_y: list) -> int:
     if list_x > list_y:
         return 1
@@ -54,8 +51,8 @@ def convert_function(path_img_: str, path_logo_: str, path_save_: str, location_
         x = bottom_left_x
 
     else:
-        y = bottom_right_y
-        x = bottom_right_x
+        y = top_left_y
+        x = top_left_x
 
     rows_2 += y
     cols_2 += x
@@ -83,8 +80,7 @@ def main():
     path_images = arguments[2]
     location = arguments[4]
 
-    path_images = path_images.strip('[]').split(', ')
-    images_list = [item.replace("'", "") for item in path_images]
+    images_list = path_images.split(',')
     for path_img in images_list:
         name = path_img.split(r" \ ".strip())[-1]
         save_path = arguments[3]
@@ -95,5 +91,4 @@ def main():
 
 if __name__ == '__main__':
     arguments = sys.argv
-    # arguments = test_arguments
     main()
