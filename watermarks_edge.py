@@ -1,5 +1,4 @@
 import cv2 as cv
-import glob
 import numpy as np
 import sys
 
@@ -16,31 +15,27 @@ def type_img(list_x: list, list_y: list) -> int:
         return 0
 
 
-def convert_function(path_img_: str, path_logo_: str, path_save_: str, location_: str, bias: str) -> None:
-    bias = int(bias)
-
+def convert_function(path_img_: str, path_logo_: str, path_save_: str, location_: str) -> None:
     img = cv.imdecode(np.fromfile(path_img_, dtype=np.uint8), cv.IMREAD_COLOR)
 
     logo = cv.imread(path_logo_)
     axis = type_img(img.shape[1], img.shape[0])
-    ratio = img.shape[axis] / logo.shape[axis]
-    if ratio < 3.7:
-        logo = cv.resize(logo, (int(logo.shape[1] / 3.7), int(logo.shape[0] / 3.7)))
-
+    ratio = img.shape[axis] / 7.86
+    logo = cv.resize(logo, (int(ratio), int(ratio)))
     rows_1, cols_1, channels_1 = img.shape
     rows_2, cols_2, channels_2 = logo.shape
 
-    top_left_y = bias
-    top_left_x = bias
+    top_left_y = 0
+    top_left_x = 0
 
-    top_right_y = bias
-    top_right_x = cols_1 - cols_2 - bias
+    top_right_y = 0
+    top_right_x = cols_1 - cols_2
 
-    bottom_left_y = rows_1 - rows_2 - bias
-    bottom_left_x = bias
+    bottom_left_y = rows_1 - rows_2
+    bottom_left_x = 0
 
-    bottom_right_y = rows_1 - rows_2 - bias
-    bottom_right_x = cols_1 - cols_2 - bias
+    bottom_right_y = rows_1 - rows_2
+    bottom_right_x = cols_1 - cols_2
 
     if location_ == '4':
         y = bottom_right_y
@@ -85,18 +80,17 @@ def convert_function(path_img_: str, path_logo_: str, path_save_: str, location_
 
 def main():
     path_logo = arguments[1]
-    path_folder_img = arguments[2]
+    path_images = arguments[2]
     location = arguments[4]
-    bias_ = arguments[5]
 
-    folder = glob.glob(f'{path_folder_img}/*.*')
-
-    for path_img in folder:
+    path_images = path_images.strip('[]').split(', ')
+    images_list = [item.replace("'", "") for item in path_images]
+    for path_img in images_list:
         name = path_img.split(r" \ ".strip())[-1]
         save_path = arguments[3]
         save_path = fr"{save_path}\logo_{name}"
 
-        convert_function(path_img, path_logo, save_path, location, bias_)
+        convert_function(path_img, path_logo, save_path, location)
 
 
 if __name__ == '__main__':
