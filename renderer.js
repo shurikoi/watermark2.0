@@ -1,12 +1,9 @@
 let settings = require("./settings.json"),
-    folderPath = [],
+    folderPath = settings.lastPath,
     choosenImgs = [],
     choosenLogo = 0,
-    themeImgUrls = {
-        moon: "imgs/moon.png", 
-        sun: "imgs/sun.png"
-    }
-    
+    corner = 0
+
 const { ipcRenderer } = require('electron')
 const fs = require("fs")
 
@@ -14,13 +11,31 @@ setTimeout(() => document.querySelector(".loader-wrapper").remove(), 300)
 
 let body = document.querySelector("body")
 let toggleButton = document.querySelector(".toggle-button")
-let toggleButtonImg = document.querySelector(".toggle-button-wrapper img")
+// let toggleButtonImg = document.querySelector(".toggle-button-wrapper img")
 let demo = document.querySelector(".demo-wrapper")
+let demoImg = document.querySelector(".demo-img")
 let logoItems = document.querySelectorAll(".logo-item")
+let processBtn = document.querySelector(".process-button")
 
 function outputImgs(){
     document.querySelector(".choosen-files > span").textContent = choosenImgs.length
-    document.querySelector(".demo-img").setAttribute("src", choosenImgs[0])
+    
+    if (choosenImgs.length > 0){
+        demoImg.setAttribute("src", choosenImgs[0])
+
+        demo.classList.remove("demo-border")
+        demoImg.classList.add("demo-border")
+        document.querySelector(".clear-files").classList.remove("hidden")
+        document.querySelector(".choose-files-button-wrapper").classList.add("hidden")
+    }
+    else{
+        demoImg.setAttribute("src", "")
+
+        demo.classList.add("demo-border")
+        demoImg.classList.remove("demo-border")
+        document.querySelector(".clear-files").classList.add("hidden")
+        document.querySelector(".choose-files-button-wrapper").classList.remove("hidden")
+    }
 }
 
 document.querySelector(".choose-path-button").addEventListener("click", () => {
@@ -43,9 +58,22 @@ ipcRenderer.on("folder-path", (event, args) => {
     }
 })
 
-document.querySelector(".process-button").addEventListener("click", () => {
-    if (choosenImgs.length > 0)
-        ipcRenderer.send("process", choosenImgs)
+document.querySelectorAll("[name=position]").forEach(radioBtn => {
+    radioBtn.addEventListener("input", (event) => {
+        document.querySelector(".demo-logo").id = event.target.id
+    })
+})
+
+processBtn.addEventListener("click", () => {
+    if (choosenImgs.length > 0){     
+        ipcRenderer.send("process", {
+            imgs: choosenImgs,
+            folder: folderPath,
+            logo: choosenLogo,
+            corner: document.querySelector("[name=position]:checked").dataset.index
+        })
+        processBtn.setAttribute("disabled", "disabled")
+    }
 })
 
 ipcRenderer.on("app-closing", () => {
@@ -109,18 +137,13 @@ demo.addEventListener("drop", (e) => {
 
     console.log(e.dataTransfer.files)
 
-    document.querySelector(".demo-wrapper").classList.remove("demo-border")
-    document.querySelector(".demo-img").classList.add("demo-border")
-    document.querySelector(".clear-files").classList.remove("hidden")
+    
 
     outputImgs()
 })
 
 document.querySelector(".clear-files").addEventListener("click", () => {
     choosenImgs = []
-    
-    document.querySelector(".demo-wrapper").classList.add("demo-border")
-    document.querySelector(".demo-img").classList.remove("demo-border")
     
     outputImgs()
 })

@@ -15,8 +15,8 @@
     <div class="container">
         <header class="app-header">
             <div class="toggle-button-wrapper">
-                <img src="imgs/moon.png" alt="" class="moon-img toggle-button-img">
-                <img src="imgs/sun.png" alt="" class="sun-img toggle-button-img">
+                <img src="imgs/moon.png" class="moon-img toggle-button-img">
+                <img src="imgs/sun.png" class="sun-img toggle-button-img">
                 <input type="checkbox" class="toggle-button">
             </div>
             <div class="header-text-wrapper">
@@ -28,14 +28,39 @@
             <div class="settings">
                 <div class="files-wrapper">
                     <div class="choosen-files">Вибрано файлiв <span>0</span></div>
-                    <div class="clear-files hidden">x</div>
+                    <div class="clear-files hidden">
+                        <img src="imgs/krestik.svg">
+                    </div>
                 </div>
                 <div class="logo-choose">
                     <div class="logo-choose-header">Вибiр логотипу</div>
                     <div class="logos">
-                        <div class="logo-item logo-1 choosen-logo"><img src="imgs/logo.png" alt=""></div>
-                        <div class="logo-item logo-2"><img src="imgs/logo-en.png" alt=""></div>
-                        <div class="logo-item logo-3"><img src="imgs/logo-white.png" alt=""></div>
+                        <div class="logo-item logo-1 choosen-logo"><img src="imgs/logo.png"></div>
+                        <div class="logo-item logo-2"><img src="imgs/logo-en.png"></div>
+                        <div class="logo-item logo-3"><img src="imgs/logo-white.png"></div>
+                    </div>
+                </div>
+                <div class="logo-position-wrapper">
+                    <div class="logo-position-header">
+                        Розташування
+                    </div>
+                    <div class="logo-position-choose">
+                        <div class="top-left-corner corner">
+                            <input type="radio" data-index="1" name="position" checked id="top-left-corner">
+                            <label for="top-left-corner">зверху справа</label>
+                        </div>
+                        <div class="top-right-corner corner">
+                            <input type="radio" data-index="2" name="position" id="top-right-corner">
+                            <label for="top-right-corner">знизу злiва</label>
+                        </div>
+                        <div class="bottom-left-corner corner">
+                            <input type="radio" data-index="3" name="position" id="bottom-left-corner">
+                            <label for="bottom-left-corner">зверху знизу</label>
+                        </div>
+                        <div class="bottom-right-corner corner">
+                            <input type="radio" data-index="4" name="position" id="bottom-right-corner">
+                            <label for="bottom-right-corner">Слева справа</label>
+                        </div>
                     </div>
                 </div>
                 <div class="path-choose">
@@ -44,10 +69,13 @@
                     <div class="choose-path-button blue-button button small-button">Огляд...</div>
                 </div>
                 <div class="process-button gray-button button small-button">Обробка</div>
-                
+
             </div>
             <div class="demo-wrapper demo-border ">
-                <img src="" alt="" class="demo-img">
+                <div class="demo-img-wrapper">
+                    <img class="demo-img">
+                    <img src="imgs/logo.png" class="demo-logo">
+                </div>
                 <div class="choose-files-button-wrapper">
                     <div class="choose-files blue-button button big-button">Вибiр зображення</div>
                     <div class="choose-files-text">або перетягніть файли сюди (.png, .jpg)</div>
@@ -60,3 +88,17 @@
 </body>
 
 </html>
+
+<!-- ipcMain.on("process", (event, args) => {
+    console.log(args)
+
+    execFile(path.join(__dirname, "watermarks_edge.exe"), [logo[args.logo], [args.imgs], args.folder, "1", "-u"], {encoding: "UTF-8"}, (err, out) => {1
+
+      console.log("err => " + err, "out => " + out)
+    })
+
+    // process.stdout.setEncoding('utf8')
+
+    // process.stdout.on("data", (data) => console.log(data))
+
+  }) -->
