@@ -1,3 +1,22 @@
+@font-face {
+    font-family: "E-Ukraine";
+    src: url("fonts/e-Ukraine-Regular.otf");
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: "E-Ukraine";
+    src: url("fonts/e-Ukraine-UltraLight.otf");
+    font-weight: 100;
+}
+
+@font-face {
+    font-family: "HelveticaNeue";
+    src: url("fonts/HelveticaNeueCyr-Roman.otf");
+    font-weight: 400;
+}
+
+
 * {
     margin: 0;
     padding: 0;
@@ -73,6 +92,8 @@ img{
 .settings {
     display: flex;
     flex-direction: column;
+    font-family: "HelveticaNeue";
+    font-weight: 200;
     gap: 16px;
     width: 370px;
     max-width: 370px;
@@ -132,7 +153,18 @@ img{
     width: 80px;
     height: 80px;
     box-sizing: border-box;
+    transition: .25s;
+}
+
+.logo-img-wrapper{
+    display: block;
+    height: 100%;
+    width: 100%;
     cursor: pointer;
+}
+
+.logo-item input[name="logo"]{
+    display: none;
 }
 
 /* .logos .logo-item:not(:nth-child(1)) {
@@ -171,14 +203,13 @@ img{
     gap: 7px;
 }
 
-.corner label{
-    line-height: 1px;
-}
-
 .button {
     display: flex;
     justify-content: center;
     align-items: center;
+    font-family: "E-Ukraine";
+    font-weight: 100;
+    font-size: 13px;
     border-radius: 3px;
     padding: 3px 6px;
     color: white;
@@ -206,6 +237,8 @@ img{
     position: absolute;
     top: 50%;
     left: 50%;
+    font-family: "E-Ukraine";
+    font-weight: 100;
     transform: translate(-50%, -50%);
     display: flex;
     flex-direction: column;
@@ -214,7 +247,8 @@ img{
 }
 
 .choose-files-text{
-    font-size: 12px;
+    font-size: 11px;
+    white-space: nowrap;
 }
 
 .path-choose .file-path {
@@ -283,9 +317,13 @@ img{
 
 .demo-logo{
     position: absolute;
-    height: 27.5%;
+    height: calc(100% / 7.86);
     width: auto;
     z-index: 2;
+}
+
+.demo-logo.vertical{
+    width: 27.5%;
 }
 
 #top-left-corner{

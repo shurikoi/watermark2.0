@@ -1,21 +1,22 @@
+setTimeout(() => document.querySelector(".loader-wrapper").remove(), 300)  
+
 let settings = require("./settings.json"),
     folderPath = settings.lastPath,
     choosenImgs = [],
-    choosenLogo = 0,
-    corner = 0
+    choosenLogo = 0
 
 const { ipcRenderer } = require('electron')
 const fs = require("fs")
 
-setTimeout(() => document.querySelector(".loader-wrapper").remove(), 300)  
+const allowedExtensions = ["jpg", "png"]
+const logo = ["imgs/logo.png", "imgs/logo-en.png", "imgs/logo-white.png"]
 
-let body = document.querySelector("body")
-let toggleButton = document.querySelector(".toggle-button")
-// let toggleButtonImg = document.querySelector(".toggle-button-wrapper img")
-let demo = document.querySelector(".demo-wrapper")
-let demoImg = document.querySelector(".demo-img")
-let logoItems = document.querySelectorAll(".logo-item")
-let processBtn = document.querySelector(".process-button")
+const body = document.querySelector("body")
+const toggleButton = document.querySelector(".toggle-button")
+const demo = document.querySelector(".demo-wrapper")
+const demoImg = document.querySelector(".demo-img")
+const logoItems = document.querySelectorAll(".logo-item")
+const processBtn = document.querySelector(".process-button")
 
 function outputImgs(){
     document.querySelector(".choosen-files > span").textContent = choosenImgs.length
@@ -27,6 +28,10 @@ function outputImgs(){
         demoImg.classList.add("demo-border")
         document.querySelector(".clear-files").classList.remove("hidden")
         document.querySelector(".choose-files-button-wrapper").classList.add("hidden")
+
+        let imgWidth = window.getComputedStyle(document.querySelector(".demo-img")).getPropertyValue("width")
+        let imgHeight = window.getComputedStyle(document.querySelector(".demo-img")).getPropertyValue("height")
+        console.log(imgWidth, imgHeight)
     }
     else{
         demoImg.setAttribute("src", "")
@@ -58,18 +63,25 @@ ipcRenderer.on("folder-path", (event, args) => {
     }
 })
 
-document.querySelectorAll("[name=position]").forEach(radioBtn => {
-    radioBtn.addEventListener("input", (event) => {
+document.querySelectorAll("[name=logo]").forEach(positionBtn => {
+    positionBtn.addEventListener("input", (event) => {
+        document.querySelector(".demo-logo").setAttribute("src", logo[event.target.dataset.index])
+    })
+})
+
+document.querySelectorAll("[name=position]").forEach(positionBtn => {
+    positionBtn.addEventListener("input", (event) => {
         document.querySelector(".demo-logo").id = event.target.id
     })
 })
 
 processBtn.addEventListener("click", () => {
     if (choosenImgs.length > 0){     
+        console.log(typeof(choosenImgs), choosenImgs)
         ipcRenderer.send("process", {
             imgs: choosenImgs,
             folder: folderPath,
-            logo: choosenLogo,
+            logo: logo[document.querySelector("[name=logo]:checked").dataset.index],
             corner: document.querySelector("[name=position]:checked").dataset.index
         })
         processBtn.setAttribute("disabled", "disabled")
@@ -133,11 +145,15 @@ document.querySelector(".choose-files").addEventListener("click", () => {
 
 demo.addEventListener("drop", (e) => {
     demo.classList.remove("dragover")
-    choosenImgs = [...e.dataTransfer.files].map(el => el.path)
 
-    console.log(e.dataTransfer.files)
-
+    let files = [...e.dataTransfer.files]
     
+    choosenImgs = []
+    
+    files.forEach(elem => {
+        if (allowedExtensions.includes(elem.path.split(".").at(-1)))
+            choosenImgs.push(elem.path) 
+    })
 
     outputImgs()
 })

@@ -3,7 +3,6 @@ const { spawn } = require("child_process")
 const fs = require("fs")
 const path = require("path")
 
-const logo = ["imgs/logo.png", "imgs/logo-en.png", "imgs/logo-white.png"]
 
 const createWindow = () => {
   const win = new BrowserWindow({
@@ -37,17 +36,17 @@ const createWindow = () => {
 
   ipcMain.on("process", (event, args) => {
     console.log(args)
-    let process = spawn(path.join(__dirname, "watermarks_edge.exe"), [logo[args.logo], [args.imgs], args.folder, args.corner])
+    let process = spawn(path.join(__dirname, "watermarks_edge.exe"), [args.logo, [args.imgs], args.folder, args.corner])
 
     let filesCount = 0
-
-    fs.readdir("C:/Users/verbo/Desktop/imgs_for_test/rendered imgs", (err, files) => {
+    console.log(args.folder)
+    fs.readdir(args.folder, (err, files) => {
       filesCount = files.length
     })
 
     console.log(filesCount)
     let interval = setInterval(() => {
-      fs.readdir("C:/Users/verbo/Desktop/imgs_for_test/rendered imgs", (err, files) => {
+      fs.readdir(args.folder, (err, files) => {
         win.setProgressBar((files.length - filesCount) / args.imgs.length)
       })
     }, 250)
