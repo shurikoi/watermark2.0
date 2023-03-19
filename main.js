@@ -43,18 +43,23 @@ const createWindow = () => {
     fs.readdir(args.folder, (err, files) => {
       filesCount = files.length
     })
-
+    event.sender
     console.log(filesCount)
     let interval = setInterval(() => {
       fs.readdir(args.folder, (err, files) => {
-        win.setProgressBar((files.length - filesCount) / args.imgs.length)
+        let progress = (files.length - filesCount) / args.imgs.length
+        console.log(files.length, filesCount, args.imgs.length)
+        event.sender.send("progress", progress)
+        win.setProgressBar(progress)
       })
     }, 250)
 
     process.on("close", () => {
-      clearInterval(interval)
-      win.setProgressBar(0)
-      console.log("interval cleared")
+      setTimeout(() => {
+        clearInterval(interval)
+        win.setProgressBar(0)
+        console.log("interval cleared")
+      }, 1000)
     })
 
   })

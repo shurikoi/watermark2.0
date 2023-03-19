@@ -52,9 +52,12 @@ img{
     display: flex;
     justify-content: center;
     flex-direction: column;
+    font-family: 'e-Ukraine';
+    font-weight: 400;
     height: 146px;
     font-size: 25px;
     font-weight: 400;
+    padding-top: 20px;
     padding-left: 40px;
     background-color: #7E3DAB;
     color: #FFFFFF;
@@ -72,7 +75,7 @@ img{
 
 .app-header .header-text-wrapper{
     display: flex;
-    gap: 15px;
+    gap: 5px;
     align-items: center;
 }
 
@@ -323,7 +326,8 @@ img{
 }
 
 .demo-logo.vertical{
-    width: 27.5%;
+    height: auto;
+    width: calc(100% / 7.86);
 }
 
 #top-left-corner{
@@ -357,8 +361,13 @@ img{
 }
 
 .progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
     height: 19px;
     background-color: #D9D9D9;
+    transition: .25s;
 }
 
 .toggle-button-wrapper{

@@ -15,6 +15,7 @@ const body = document.querySelector("body")
 const toggleButton = document.querySelector(".toggle-button")
 const demo = document.querySelector(".demo-wrapper")
 const demoImg = document.querySelector(".demo-img")
+const demoLogo = document.querySelector(".demo-logo")
 const logoItems = document.querySelectorAll(".logo-item")
 const processBtn = document.querySelector(".process-button")
 
@@ -29,9 +30,14 @@ function outputImgs(){
         document.querySelector(".clear-files").classList.remove("hidden")
         document.querySelector(".choose-files-button-wrapper").classList.add("hidden")
 
-        let imgWidth = window.getComputedStyle(document.querySelector(".demo-img")).getPropertyValue("width")
-        let imgHeight = window.getComputedStyle(document.querySelector(".demo-img")).getPropertyValue("height")
-        console.log(imgWidth, imgHeight)
+        let img = new Image()
+        
+        img.src = choosenImgs[0] 
+
+        if (img.width > img.height)
+            demoLogo.classList.add("vertical")
+        else
+            demoLogo.classList.remove("vertical")
     }
     else{
         demoImg.setAttribute("src", "")
@@ -65,25 +71,32 @@ ipcRenderer.on("folder-path", (event, args) => {
 
 document.querySelectorAll("[name=logo]").forEach(positionBtn => {
     positionBtn.addEventListener("input", (event) => {
-        document.querySelector(".demo-logo").setAttribute("src", logo[event.target.dataset.index])
+        demoLogo.setAttribute("src", logo[event.target.dataset.index])
     })
 })
 
 document.querySelectorAll("[name=position]").forEach(positionBtn => {
     positionBtn.addEventListener("input", (event) => {
-        document.querySelector(".demo-logo").id = event.target.id
+        demoLogo.id = event.target.id
     })
 })
 
 processBtn.addEventListener("click", () => {
     if (choosenImgs.length > 0){     
+        ipcRenderer.on("progress", (err, args) => {
+            console.log("args", args)
+            document.querySelector(".progress-bar").style.width = `${args * 100}%`
+        })
+
         console.log(typeof(choosenImgs), choosenImgs)
+        
         ipcRenderer.send("process", {
             imgs: choosenImgs,
             folder: folderPath,
             logo: logo[document.querySelector("[name=logo]:checked").dataset.index],
             corner: document.querySelector("[name=position]:checked").dataset.index
         })
+        
         processBtn.setAttribute("disabled", "disabled")
     }
 })
