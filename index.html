@@ -15,9 +15,20 @@
     <div class="container">
         <header class="app-header">
             <div class="toggle-button-wrapper">
-                <img src="imgs/moon.png" class="moon-img toggle-button-img">
-                <img src="imgs/sun.png" class="sun-img toggle-button-img">
                 <input type="checkbox" class="toggle-button">
+                <?xml version="1.0" encoding="utf-8"?>
+
+                <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+                <svg class="moon-img toggle-button-img" width="800px" height="800px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink">
+
+                    <path
+                        d="M9.882 5.052c-0.847 1.717-1.295 3.614-1.295 5.564 0 6.977 5.676 12.653 12.653 12.653 2.052 0 4.035-0.489 5.812-1.412-2.15 3.869-6.248 6.37-10.862 6.37-6.866 0-12.451-5.585-12.451-12.451 0-4.491 2.409-8.533 6.143-10.724zM12.79 2.707c-5.817 1.509-10.118 6.78-10.118 13.069 0 7.465 6.053 13.517 13.518 13.517 6.387 0 11.726-4.435 13.139-10.389-2.087 2.039-4.939 3.298-8.088 3.298-6.399 0-11.587-5.188-11.587-11.587 0-3.061 1.196-5.838 3.137-7.909v0z"
+                        fill="#000000">
+
+                    </path>
+                </svg>
+                <img src="imgs/sun.svg" class="sun-img toggle-button-img">
             </div>
             <div class="header-text-wrapper">
                 <div class="header-text">Накладання логотипу на зображення</div>
@@ -36,19 +47,19 @@
                     <div class="logo-choose-header">Вибiр логотипу</div>
                     <div class="logos">
                         <div class="logo-item logo-1 choosen-logo">
-                            <input type="radio" data-index="0" checked name="logo" id="logo-ua-black">
+                            <input type="radio" checked name="logo" id="logo-ua-black">
                             <label for="logo-ua-black" class="logo-img-wrapper">
                                 <img src="imgs/logo.png">
                             </label>
                         </div>
                         <div class="logo-item logo-2">
-                            <input type="radio" data-index="1" name="logo" id="logo-en-black">
+                            <input type="radio" name="logo" id="logo-en-black">
                             <label for="logo-en-black" class="logo-img-wrapper">
                                 <img src="imgs/logo-en.png">
                             </label>
                         </div>
                         <div class="logo-item logo-3">
-                            <input type="radio" data-index="2" name="logo" id="logo-ua-white">
+                            <input type="radio" name="logo" id="logo-ua-white">
                             <label for="logo-ua-white" class="logo-img-wrapper">
                                 <img src="imgs/logo-white.png">
                             </label>
@@ -62,19 +73,19 @@
                     <div class="logo-position-choose">
                         <div class="top-left-corner corner">
                             <input type="radio" data-index="1" name="position" checked id="top-left-corner">
-                            <label for="top-left-corner">зверху справа</label>
+                            <label for="top-left-corner">зверху злiва</label>
                         </div>
                         <div class="top-right-corner corner">
                             <input type="radio" data-index="2" name="position" id="top-right-corner">
-                            <label for="top-right-corner">знизу злiва</label>
+                            <label for="top-right-corner">зверху справа</label>
                         </div>
                         <div class="bottom-left-corner corner">
                             <input type="radio" data-index="3" name="position" id="bottom-left-corner">
-                            <label for="bottom-left-corner">зверху знизу</label>
+                            <label for="bottom-left-corner">знизу злiва</label>
                         </div>
                         <div class="bottom-right-corner corner">
                             <input type="radio" data-index="4" name="position" id="bottom-right-corner">
-                            <label for="bottom-right-corner">Слева справа</label>
+                            <label for="bottom-right-corner">знизу справа</label>
                         </div>
                     </div>
                 </div>
@@ -89,7 +100,7 @@
             <div class="demo-wrapper demo-border ">
                 <div class="demo-img-wrapper">
                     <img class="demo-img">
-                    <img src="imgs/logo.png" id = "top-left-corner" class="demo-logo">
+                    <img src="imgs/logo.png" id="top-left-corner" class="demo-logo">
                 </div>
                 <div class="choose-files-button-wrapper">
                     <div class="choose-files blue-button button big-button">Вибiр зображення</div>
