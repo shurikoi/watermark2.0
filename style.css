@@ -331,23 +331,23 @@ img{
 }
 
 #top-left-corner{
-    left: 0;
-    top: 0;
+    left: 3px;
+    top: 3px;
 }
 
 #top-right-corner{
-    right: 0;
-    top: 0;
+    right: 3px;
+    top: 3px;
 }
 
 #bottom-left-corner{
-    left: 0;
-    bottom: 0;
+    left: 3px;
+    bottom: 3px;
 }
 
 #bottom-right-corner{
-    right: 0;
-    bottom: 0;
+    right: 3px;
+    bottom: 3px;
 }
 
 

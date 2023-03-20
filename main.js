@@ -43,7 +43,6 @@ const createWindow = () => {
     fs.readdir(args.folder, (err, files) => {
       filesCount = files.length
     })
-    event.sender
     console.log(filesCount)
     let interval = setInterval(() => {
       fs.readdir(args.folder, (err, files) => {

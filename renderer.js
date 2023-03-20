@@ -33,11 +33,13 @@ function outputImgs(){
         let img = new Image()
         
         img.src = choosenImgs[0] 
-
-        if (img.width > img.height)
-            demoLogo.classList.add("vertical")
-        else
-            demoLogo.classList.remove("vertical")
+        
+        img.onload = () => {
+            if (img.width > img.height)
+                demoLogo.classList.add("vertical")
+            else
+                demoLogo.classList.remove("vertical")
+        }
     }
     else{
         demoImg.setAttribute("src", "")
@@ -62,9 +64,10 @@ ipcRenderer.on("choosen-files", (event, args) => {
 })
 
 ipcRenderer.on("folder-path", (event, args) => {
-    let path = args
+    let path = args[0]
     if (path.length > 0){
         folderPath = path
+        console.log(...folderPath)
         document.querySelector(".file-path").textContent = folderPath
     }
 })
