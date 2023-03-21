@@ -1,10 +1,15 @@
 {
   "name": "water-marker-app",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "water marker",
   "main": "main.js",
   "author": "zygmunt krasiński",
   "build": {
+    "files": [
+      "**/*",
+      "!settings.json"
+    ],
+    "asar": "false",
     "publish": [
       {
         "provider": "github",

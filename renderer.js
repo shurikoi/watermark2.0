@@ -11,8 +11,7 @@ const logo = ["imgs/logo.png", "imgs/logo-en.png", "imgs/logo-white.png"]
 let settings
 
 try {
-    settings = require("./settings.json")
-    console.log("settings setted")
+    settings = require(path.join(__dirname, "settings.json"))
 }catch(err){
     settings = {
         isDark: "false",
@@ -20,7 +19,6 @@ try {
         position: 1,
         logo: 0
     }
-    console.log("settings setted")
 }
 let folderPath = settings.path,
     choosenImgs = []
@@ -30,17 +28,15 @@ const toggleButton = document.querySelector(".toggle-button")
 const demo = document.querySelector(".demo-wrapper")
 const demoImg = document.querySelector(".demo-img")
 const demoLogo = document.querySelector(".demo-logo")
-const logoItems = document.querySelectorAll(".logo-item")
 const processBtn = document.querySelector(".process-button")
+const logoItems = document.querySelectorAll(".logo-item")
+const positionInputs = document.querySelectorAll("[name=position]")
+const logoInputs = document.querySelectorAll("[name=logo]")
 
+document.querySelector(".file-path").textContent = folderPath
 
-document.querySelector(".file-path").textContent = settings.path
-document.querySelectorAll("[name=position]")[settings.position - 1].checked = true
-document.querySelectorAll("[name=logo]")[settings.logo].checked = true
-console.log("init")
 function writeSettings(){
-    console.log(settings)
-    fs.writeFile("./settings.json", JSON.stringify(settings), () => {})
+    fs.writeFile(path.join(__dirname, "settings.json"), JSON.stringify(settings), () => {})
 }
 
 function outputImgs(){
@@ -75,15 +71,22 @@ function outputImgs(){
     }
 }
 
+ipcRenderer.on("checking", () => {
+    console.log("checking")
+})
+
+ipcRenderer.on("update-available", () => {
+    console.log("update is here")
+})
+
 document.querySelector(".choose-path-button").addEventListener("click", () => {
     ipcRenderer.send("choose-folder")
 
     ipcRenderer.once("folder-path", (event, args) => {
-        console.log(args)
         if (args != ""){
-            settings.path = args
-            
-            document.querySelector(".file-path").textContent = settings.path
+            folderPath = args
+            settings.path = folderPath
+            document.querySelector(".file-path").textContent = folderPath
         }
         writeSettings()
     })
@@ -91,7 +94,7 @@ document.querySelector(".choose-path-button").addEventListener("click", () => {
 
 let lastChoosenItem = 0
 
-document.querySelectorAll("[name=logo]").forEach((logoBtn, index) => {
+logoInputs.forEach((logoBtn, index) => {
     logoBtn.addEventListener("input", (event) => {
         logoItems[lastChoosenItem].classList.remove("choosen-logo")
         logoItems[index].classList.add("choosen-logo")
@@ -105,13 +108,21 @@ document.querySelectorAll("[name=logo]").forEach((logoBtn, index) => {
     })
 })
 
-document.querySelectorAll("[name=position]").forEach((positionBtn, index) => {
+positionInputs.forEach((positionBtn, index) => {
     positionBtn.addEventListener("input", (event) => {
-        demoLogo.id = event.target.id
+        demoLogo.id = event.target.dataset.id
         settings.position = event.target.dataset.index
         writeSettings()
     })
 })
+
+ipcRenderer.on("console-out", (event, args) => console.log(args))
+
+positionInputs[settings.position - 1].checked = true
+positionInputs[settings.position - 1].dispatchEvent(new Event("input"))
+
+logoInputs[settings.logo].checked = true
+logoInputs[settings.logo].dispatchEvent(new Event("input"))
 
 processBtn.addEventListener("click", () => {
     if (choosenImgs.length > 0){     
@@ -120,8 +131,6 @@ processBtn.addEventListener("click", () => {
             document.querySelector(".progress-bar").style.width = `${args * 100}%`
         })
 
-        console.log(typeof(choosenImgs), choosenImgs)
-        
         ipcRenderer.send("process", {
             imgs: choosenImgs,
             folder: folderPath,

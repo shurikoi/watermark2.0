@@ -19,14 +19,18 @@ const createWindow = () => {
 
   win.loadFile('index.html')
 
-  autoUpdater.autoDownload = false
+  fs.readdir(__dirname, (err, files) => {
+    win.webContents.send("console-out", [files.path, files])
+  })
+
+  autoUpdater.checkForUpdatesAndNotify()
 
   autoUpdater.on("checking-for-update", () => {
-    console.log("checking")
+    win.webContents.send("console-out", "checking")
   })
 
   autoUpdater.on("update-available", () => {
-    console.log("update available")
+    win.webContents.send("console-out", "update-available")
   })
 
   console.log(app.getVersion())
@@ -48,8 +52,22 @@ const createWindow = () => {
   })
 
   ipcMain.on("process", (event, args) => {
-    console.log(args)
-    let process = spawn(path.join(__dirname, "watermarks_edge.exe"), [args.logo, [args.imgs], args.folder, args.position])
+
+    event.sender.send("console-out", [__dirname, path.join(__dirname, "watermarks_edge.exe"), [args.logo, args.imgs, args.folder, args.position]])
+
+    // let process = spawn("powershell.exe", [path.join(__dirname, "watermarks_edge.exe"), args.logo, [args.imgs], args.folder, args.position])
+    let process = spawn(path.join(__dirname, "watermarks_edge.exe"), [args.logo, args.imgs, args.folder, args.position])
+
+    process.stderr.on("data", (data) => {
+      win.webContents.send("console-out", "err " + data)
+    })
+    
+    process.stdout.on("data", (data) => {
+      win.webContents.send("console-out", data)
+    })
+    // let process = execFile(path.join(__dirname, "watermarks_edge.exe"), [args.logo, [args.imgs], args.folder, args.position], (err) => {
+    //   win.webContents.send("console-out", err)
+    // })
 
     let filesCount = 0
     console.log(args.folder)
@@ -73,7 +91,7 @@ const createWindow = () => {
         clearInterval(interval)
         win.setProgressBar(0)
         console.log("interval cleared")
-      }, 1000)
+      }, 300)
     })
 
   })
@@ -86,4 +104,5 @@ const createWindow = () => {
 
 app.whenReady().then(() => {
   createWindow()
+  
 })
