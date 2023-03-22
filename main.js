@@ -1,5 +1,4 @@
 const { ipcMain, dialog, app, BrowserWindow } = require('electron')
-const { spawn } = require("child_process")
 const { autoUpdater } = require("electron-updater")
 const sharp = require("sharp")
 const fs = require("fs")
@@ -20,8 +19,9 @@ const createWindow = () => {
   win.loadFile('index.html')
 
   async function compositeImages(img, folder, logo, position) {
+    win.webContents.send("console-out", path.join(folder, img.split("\\").at(-1)))
     const imgMetaData = await sharp(img).metadata()
-  
+    win.webContents.send("console-out", "25 " + imgMetaData)
     let logoPosition = [0, 0]
     let logoSize
   
@@ -29,9 +29,11 @@ const createWindow = () => {
         logoSize = Math.round(imgMetaData.width / 7.86)
     else
         logoSize = Math.round(imgMetaData.height / 7.86)
+    win.webContents.send("console-out", "33 " + logoSize)
   
-    let logoImg = await sharp(logo).resize({width: logoSize, height: logoSize}).toBuffer()
+    let logoImg = await sharp(path.join(__dirname, logo)).resize({width: logoSize, height: logoSize}).toBuffer()
     let logoMetaData = await sharp(logoImg).metadata()
+    win.webContents.send("console-out", "36 " + imgMetaData)
 
     switch(position){
       case('1'):
@@ -47,21 +49,24 @@ const createWindow = () => {
         logoPosition = [imgMetaData.width - logoMetaData.width, imgMetaData.height - logoMetaData.height]
         break
     }
-  
+    
     await sharp(img).composite([
       {
         input: logoImg,
         top: logoPosition[1],
         left: logoPosition[0],
       },  
-    ]).toFile(path.join(folder, img.split("\\").at(-1)));
+    ]).toFile(path.join(folder, img.split("\\").at(-1)))
+    win.webContents.send("console-out", "60 " + imgMetaData)
+
+    win.webContents.send("console-out", [ logoImg, logoPosition])
   }
 
   fs.readdir(__dirname, (err, files) => {
     win.webContents.send("console-out", [files.path, files])
   })
 
-  autoUpdater.checkForUpdatesAndNotify()
+  autoUpdater.checkForUpdates()
 
   autoUpdater.on("checking-for-update", () => {
     win.webContents.send("console-out", "checking")
@@ -87,6 +92,7 @@ const createWindow = () => {
   })
 
   ipcMain.on("process", (event, args) => {
+    win.webContents.send("console-out", args)
     args.imgs.forEach(img => {
       compositeImages(img, args.folder, args.logo, args.position)
     })

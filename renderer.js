@@ -14,7 +14,7 @@ try {
     settings = require(path.join(__dirname, "settings.json"))
 }catch(err){
     settings = {
-        isDark: "false",
+        isDark: false,
         path: path.join(os.homedir(), "Downloads"),
         position: 1,
         logo: 0
@@ -146,14 +146,16 @@ ipcRenderer.on("app-closing", () => {
 })
 
 if (settings.isDark == true){
-    console.log(settings.isDark)
     body.classList.toggle("dark-mode")
     toggleButton.checked = true
 }
 
 toggleButton.addEventListener("input", (e) => {
+    console.log(settings.isDark)
+
     body.classList.toggle("dark-mode")
     settings.isDark = !settings.isDark
+    console.log(settings.isDark)
     writeSettings()
 })
 
