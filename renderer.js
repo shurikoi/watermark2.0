@@ -145,26 +145,16 @@ processBtn.addEventListener("click", () => {
 ipcRenderer.on("app-closing", () => {
 })
 
-
 if (settings.isDark == true){
     console.log(settings.isDark)
     body.classList.toggle("dark-mode")
     toggleButton.checked = true
-    // toggleButtonImg.src = themeImgUrls.sun
 }
-// else{
-//     toggleButtonImg.src = themeImgUrls.moon
-// }
-
 
 toggleButton.addEventListener("input", (e) => {
     body.classList.toggle("dark-mode")
     settings.isDark = !settings.isDark
     writeSettings()
-    // if (e.target.checked)
-    //     toggleButtonImg.src = themeImgUrls.sun
-    // else
-    //     toggleButtonImg.src = themeImgUrls.moon
 })
 
 demo.addEventListener("dragover", (e) => {
