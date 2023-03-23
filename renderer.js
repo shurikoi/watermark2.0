@@ -33,6 +33,9 @@ const logoItems = document.querySelectorAll(".logo-item")
 const positionInputs = document.querySelectorAll("[name=position]")
 const logoInputs = document.querySelectorAll("[name=logo]")
 
+let imgWidth
+let imgHeight
+
 document.querySelector(".file-path").textContent = folderPath
 
 function writeSettings(){
@@ -47,15 +50,15 @@ function outputImgs(){
 
         demo.classList.remove("demo-border")
         demoImg.classList.add("demo-border")
+
         document.querySelector(".clear-files").classList.remove("hidden")
         document.querySelector(".choose-files-button-wrapper").classList.add("hidden")
 
-        let img = new Image()
-        
-        img.src = choosenImgs[0] 
-        
-        img.onload = () => {
-            if (img.width > img.height)
+        demoImg.onload = () => {
+            const imgWidth = parseInt(window.getComputedStyle(demoImg).getPropertyValue("width"))
+            const imgHeight = parseInt(window.getComputedStyle(demoImg).getPropertyValue("height"))
+
+            if (imgWidth > imgHeight)
                 demoLogo.classList.add("vertical")
             else
                 demoLogo.classList.remove("vertical")
@@ -70,14 +73,6 @@ function outputImgs(){
         document.querySelector(".choose-files-button-wrapper").classList.remove("hidden")
     }
 }
-
-ipcRenderer.on("checking", () => {
-    console.log("checking")
-})
-
-ipcRenderer.on("update-available", () => {
-    console.log("update is here")
-})
 
 document.querySelector(".choose-path-button").addEventListener("click", () => {
     ipcRenderer.send("choose-folder")
@@ -118,10 +113,8 @@ positionInputs.forEach((positionBtn, index) => {
 
 ipcRenderer.on("console-out", (event, args) => console.log(args))
 
-positionInputs[settings.position - 1].checked = true
+positionInputs[settings.position - 1].checked = logoInputs[settings.logo].checked = true
 positionInputs[settings.position - 1].dispatchEvent(new Event("input"))
-
-logoInputs[settings.logo].checked = true
 logoInputs[settings.logo].dispatchEvent(new Event("input"))
 
 processBtn.addEventListener("click", () => {
@@ -161,13 +154,21 @@ toggleButton.addEventListener("input", (e) => {
 
 demo.addEventListener("dragover", (e) => {
     e.preventDefault()
-    console.log("over")
     demo.classList.add("dragover")
 
 })
 
 demo.addEventListener("dragleave", (e) => {
+    e.preventDefault()
+    console.log("leave")
     demo.classList.remove("dragover")
+})
+
+demo.addEventListener("drop", (e) => {
+    e.preventDefault()
+    demo.classList.remove("dragover")
+    demo.style.width = imgWidth + "px"
+    demo.style.height = imgHeight + "px"
 })
 
 document.querySelector(".choose-files").addEventListener("click", () => {
@@ -182,11 +183,10 @@ demo.addEventListener("drop", (e) => {
     demo.classList.remove("dragover")
 
     let files = [...e.dataTransfer.files]
-    
     choosenImgs = []
     
     files.forEach(elem => {
-        if (allowedExtensions.includes(elem.path.split(".").at(-1)))
+        if (allowedExtensions.includes(elem.path.toLowerCase().split(".").at(-1)))
             choosenImgs.push(elem.path) 
     })
 

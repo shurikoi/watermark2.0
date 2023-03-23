@@ -18,10 +18,12 @@ const createWindow = () => {
 
   win.loadFile('index.html')
 
+  let progress
+  let imgsLength
+
   async function compositeImages(img, folder, logo, position) {
-    win.webContents.send("console-out", path.join(folder, img.split("\\").at(-1)))
     const imgMetaData = await sharp(img).metadata()
-    win.webContents.send("console-out", "25 " + imgMetaData)
+    
     let logoPosition = [0, 0]
     let logoSize
   
@@ -29,11 +31,9 @@ const createWindow = () => {
         logoSize = Math.round(imgMetaData.width / 7.86)
     else
         logoSize = Math.round(imgMetaData.height / 7.86)
-    win.webContents.send("console-out", "33 " + logoSize)
   
     let logoImg = await sharp(path.join(__dirname, logo)).resize({width: logoSize, height: logoSize}).toBuffer()
     let logoMetaData = await sharp(logoImg).metadata()
-    win.webContents.send("console-out", "36 " + imgMetaData)
 
     switch(position){
       case('1'):
@@ -56,15 +56,13 @@ const createWindow = () => {
         top: logoPosition[1],
         left: logoPosition[0],
       },  
-    ]).toFile(path.join(folder, img.split("\\").at(-1)))
-    win.webContents.send("console-out", "60 " + imgMetaData)
-
-    win.webContents.send("console-out", [ logoImg, logoPosition])
+    ]).toFile(path.join(folder, "logo_" + img.split("\\").at(-1))).then(() => {
+      let progressBarValue = ++progress / imgsLength 
+      win.webContents.send("progress", progressBarValue)
+      win.setProgressBar(progressBarValue)
+    })
+    
   }
-
-  fs.readdir(__dirname, (err, files) => {
-    win.webContents.send("console-out", [files.path, files])
-  })
 
   autoUpdater.checkForUpdates()
 
@@ -92,8 +90,10 @@ const createWindow = () => {
   })
 
   ipcMain.on("process", (event, args) => {
-    win.webContents.send("console-out", args)
-    args.imgs.forEach(img => {
+    progress = 0
+    imgsLength = args.imgs.length
+
+    args.imgs.forEach((img, index) => {
       compositeImages(img, args.folder, args.logo, args.position)
     })
 })
