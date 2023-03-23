@@ -9,12 +9,13 @@
       "**/*",
       "!settings.json"
     ],
-    "asar": "true",
+    "asar": "false",
     "publish": [
       {
         "provider": "github",
         "owner": "shurikoi",
-        "repo": "watermark2.0"
+        "repo": "watermark2.0",
+        "releaseType": "release"
       }
     ]
   },

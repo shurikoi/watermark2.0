@@ -63,17 +63,26 @@ const createWindow = () => {
     })
     
   }
-
+  autoUpdater.autoDownload = false
   autoUpdater.checkForUpdates()
 
   autoUpdater.on("checking-for-update", () => {
     win.webContents.send("console-out", "checking")
   })
 
-  autoUpdater.on("update-available", () => {
-    win.webContents.send("console-out", "update-available")
+  autoUpdater.on("update-available", (updateInfo) => {
+    win.webContents.send("update-available", updateInfo)
   })
 
+  ipcMain.on("start-download", () => {
+    autoUpdater.downloadUpdate().then((data) => {
+      win.webContents.send("console-out", data)
+    })
+  })
+
+  autoUpdater.on("download-progress", (progressInfo) => {
+    win.webContents.send("download-progress", progressInfo)
+  })
 
   ipcMain.on("choose-files", (event) => {
     dialog.showOpenDialog({ properties: ["openFile", "multiSelections"], filters: [{ name: "Images", extensions: ["jpg", "png"] }] }).then((result) => {

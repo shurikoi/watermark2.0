@@ -14,7 +14,7 @@ try {
     settings = require(path.join(__dirname, "settings.json"))
 }catch(err){
     settings = {
-        isDark: false,
+        isDark: true,
         path: path.join(os.homedir(), "Downloads"),
         position: 1,
         logo: 0
@@ -32,6 +32,7 @@ const processBtn = document.querySelector(".process-button")
 const logoItems = document.querySelectorAll(".logo-item")
 const positionInputs = document.querySelectorAll("[name=position]")
 const logoInputs = document.querySelectorAll("[name=logo]")
+const modalWindow = document.querySelector(".modal-window")
 
 let imgWidth
 let imgHeight
@@ -73,6 +74,25 @@ function outputImgs(){
         document.querySelector(".choose-files-button-wrapper").classList.remove("hidden")
     }
 }
+
+document.querySelector(".close-modal-window").addEventListener("click", () => {
+    modalWindow.classList.add("hidden")
+})
+
+document.querySelector(".download-btn").addEventListener("click", () => {
+    console.log("starting download")
+    ipcRenderer.send("start-download")
+})
+
+ipcRenderer.on("update-available", (info) => {
+    modalWindow.classList.remove("hidden")
+    console.log("update-available", info)
+})
+
+ipcRenderer.on("download-progress", (event, progressInfo) => {
+    console.log(event, progressInfo.percent)
+    document.querySelector(".download-progress-bar").style.width = progressInfo.percent + "%"
+})
 
 document.querySelector(".choose-path-button").addEventListener("click", () => {
     ipcRenderer.send("choose-folder")
