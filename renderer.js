@@ -22,7 +22,7 @@ try {
 }
 let folderPath = settings.path,
     choosenImgs = []
-
+console.log(__dirname)
 const body = document.querySelector("body")
 const toggleButton = document.querySelector(".toggle-button")
 const demo = document.querySelector(".demo-wrapper")
@@ -40,6 +40,7 @@ let imgHeight
 document.querySelector(".file-path").textContent = folderPath
 
 function writeSettings(){
+    console.log("writed")
     fs.writeFile(path.join(__dirname, "settings.json"), JSON.stringify(settings), () => {})
 }
 

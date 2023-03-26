@@ -23,18 +23,18 @@ const createWindow = () => {
 
   async function compositeImages(img, folder, logo, position) {
     const imgMetaData = await sharp(img).metadata()
-    
+
+    if ((imgMetaData.orientation || 0) >= 5)
+      [imgMetaData.width, imgMetaData.height, imgMetaData.orientation] = [imgMetaData.height, imgMetaData.width, 1]
+
+    console.log(imgMetaData)
+
     let logoPosition = [0, 0]
-    let logoSize
-  
-    if (imgMetaData.width > imgMetaData.height)
-        logoSize = Math.round(imgMetaData.width / 7.86)
-    else
-        logoSize = Math.round(imgMetaData.height / 7.86)
-  
+    let logoSize = Math.round(((imgMetaData.width > imgMetaData.height)? imgMetaData.width: imgMetaData.height) / 7.86)
+
     let logoImg = await sharp(path.join(__dirname, logo)).resize({width: logoSize, height: logoSize}).toBuffer()
     let logoMetaData = await sharp(logoImg).metadata()
-
+    
     switch(position){
       case('1'):
         logoPosition = [0, 0]
@@ -50,7 +50,9 @@ const createWindow = () => {
         break
     }
     
-    await sharp(img).composite([
+    console.log("position" + logoPosition)
+
+    await sharp(img).rotate().composite([
       {
         input: logoImg,
         top: logoPosition[1],
@@ -64,7 +66,11 @@ const createWindow = () => {
     
   }
   autoUpdater.autoDownload = false
+  autoUpdater.autoInstallOnAppQuit = false
+  autoUpdater.autoRunAppAfterInstall = true
   autoUpdater.checkForUpdates()
+
+  win.webContents.send("console-out", app.getVersion())
 
   autoUpdater.on("checking-for-update", () => {
     win.webContents.send("console-out", "checking")
@@ -84,6 +90,12 @@ const createWindow = () => {
     win.webContents.send("download-progress", progressInfo)
   })
 
+  autoUpdater.on("update-downloaded", () => {
+    setTimeout(() => {
+      autoUpdater.quitAndInstall(true, true)
+    }, 1000)
+  })
+
   ipcMain.on("choose-files", (event) => {
     dialog.showOpenDialog({ properties: ["openFile", "multiSelections"], filters: [{ name: "Images", extensions: ["jpg", "png"] }] }).then((result) => {
       if (result.filePaths.length > 0)
@@ -101,8 +113,8 @@ const createWindow = () => {
   ipcMain.on("process", (event, args) => {
     progress = 0
     imgsLength = args.imgs.length
-
-    args.imgs.forEach((img, index) => {
+    event.sender.send("console-out", "processing")
+    args.imgs.forEach((img) => {
       compositeImages(img, args.folder, args.logo, args.position)
     })
 })

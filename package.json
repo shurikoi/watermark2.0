@@ -1,26 +1,32 @@
 {
   "name": "water-marker-app",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "water marker",
   "main": "main.js",
-  "author": "zygmunt krasiński",
+  "author": "Oleksander Bezverkhnii",
   "build": {
+    "appId": "com.watermark.app",
+    "productName": "water-marker-app",
     "files": [
-      "**/*",
-      "!settings.json"
+      "**/*"
     ],
     "asar": "false",
-    "publish": [
-      {
+    "publish": {
         "provider": "github",
         "owner": "shurikoi",
         "repo": "watermark2.0",
         "releaseType": "release"
       }
-    ]
+    ,
+    "nsis": {
+        "allowToChangeInstallationDirectory": "true",
+        "oneClick": "false",
+        "perMachine": "false"
+      }
+    
   },
   "scripts": {
-    "start": "electron .",
+    "start": "electron --trace-warnings .",
     "build": "electron-builder -p always"
   },
   "devDependencies": {
