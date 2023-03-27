@@ -81,9 +81,7 @@ const createWindow = () => {
   })
 
   ipcMain.on("start-download", () => {
-    autoUpdater.downloadUpdate().then((data) => {
-      win.webContents.send("console-out", data)
-    })
+    autoUpdater.downloadUpdate()
   })
 
   autoUpdater.on("download-progress", (progressInfo) => {
@@ -111,9 +109,10 @@ const createWindow = () => {
   })
 
   ipcMain.on("process", (event, args) => {
+    win.setProgressBar = -1
     progress = 0
     imgsLength = args.imgs.length
-    event.sender.send("console-out", "processing")
+
     args.imgs.forEach((img) => {
       compositeImages(img, args.folder, args.logo, args.position)
     })

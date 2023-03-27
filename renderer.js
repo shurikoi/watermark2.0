@@ -20,9 +20,8 @@ try {
         logo: 0
     }
 }
-let folderPath = settings.path,
-    choosenImgs = []
-console.log(__dirname)
+let choosenImgs = []
+
 const body = document.querySelector("body")
 const toggleButton = document.querySelector(".toggle-button")
 const demo = document.querySelector(".demo-wrapper")
@@ -34,13 +33,9 @@ const positionInputs = document.querySelectorAll("[name=position]")
 const logoInputs = document.querySelectorAll("[name=logo]")
 const modalWindow = document.querySelector(".modal-window")
 
-let imgWidth
-let imgHeight
-
-document.querySelector(".file-path").textContent = folderPath
+document.querySelector(".file-path").textContent = settings.path
 
 function writeSettings(){
-    console.log("writed")
     fs.writeFile(path.join(__dirname, "settings.json"), JSON.stringify(settings), () => {})
 }
 
@@ -81,28 +76,29 @@ document.querySelector(".close-modal-window").addEventListener("click", () => {
 })
 
 document.querySelector(".download-btn").addEventListener("click", () => {
-    console.log("starting download")
     ipcRenderer.send("start-download")
 })
 
-ipcRenderer.on("update-available", (info) => {
+let total
+
+ipcRenderer.on("update-available", (event, info) => {
     modalWindow.classList.remove("hidden")
-    console.log("update-available", info)
+    total = info.files.reduce((acc, el) => acc + el.size, 0)
 })
 
 ipcRenderer.on("download-progress", (event, progressInfo) => {
-    console.log(event, progressInfo.percent)
-    document.querySelector(".download-progress-bar").style.width = progressInfo.percent + "%"
+    document.querySelector(".download-progress-bar").style.width = progressInfo.transferred / total * 100 + "%"
 })
+
+ipcRenderer.on("console-out", (event, args) => console.log(args))
 
 document.querySelector(".choose-path-button").addEventListener("click", () => {
     ipcRenderer.send("choose-folder")
 
     ipcRenderer.once("folder-path", (event, args) => {
         if (args != ""){
-            folderPath = args
-            settings.path = folderPath
-            document.querySelector(".file-path").textContent = folderPath
+            settings.path = args
+            document.querySelector(".file-path").textContent = args
         }
         writeSettings()
     })
@@ -115,11 +111,9 @@ logoInputs.forEach((logoBtn, index) => {
         logoItems[lastChoosenItem].classList.remove("choosen-logo")
         logoItems[index].classList.add("choosen-logo")
         lastChoosenItem = index
-
+        
         demoLogo.setAttribute("src", logo[index])
-
         settings.logo = index
-
         writeSettings()
     })
 })
@@ -132,7 +126,6 @@ positionInputs.forEach((positionBtn, index) => {
     })
 })
 
-ipcRenderer.on("console-out", (event, args) => console.log(args))
 
 positionInputs[settings.position - 1].checked = logoInputs[settings.logo].checked = true
 positionInputs[settings.position - 1].dispatchEvent(new Event("input"))
@@ -140,14 +133,15 @@ logoInputs[settings.logo].dispatchEvent(new Event("input"))
 
 processBtn.addEventListener("click", () => {
     if (choosenImgs.length > 0){     
-        ipcRenderer.on("progress", (err, args) => {
-            console.log("args", args)
+        document.querySelector(".progress-bar").style.width = "0%"
+
+        ipcRenderer.on("progress", (event, args) => {
             document.querySelector(".progress-bar").style.width = `${args * 100}%`
         })
 
         ipcRenderer.send("process", {
             imgs: choosenImgs,
-            folder: folderPath,
+            folder: settings.path,
             logo: logo[settings.logo],
             position: settings.position
         })
@@ -156,32 +150,24 @@ processBtn.addEventListener("click", () => {
     }
 })
 
-ipcRenderer.on("app-closing", () => {
-})
-
 if (settings.isDark == true){
     body.classList.toggle("dark-mode")
     toggleButton.checked = true
 }
 
 toggleButton.addEventListener("input", (e) => {
-    console.log(settings.isDark)
-
     body.classList.toggle("dark-mode")
     settings.isDark = !settings.isDark
-    console.log(settings.isDark)
     writeSettings()
 })
 
 demo.addEventListener("dragover", (e) => {
     e.preventDefault()
     demo.classList.add("dragover")
-
 })
 
 demo.addEventListener("dragleave", (e) => {
     e.preventDefault()
-    console.log("leave")
     demo.classList.remove("dragover")
 })
 
