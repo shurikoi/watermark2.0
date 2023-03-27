@@ -1,17 +1,16 @@
 {
   "name": "water-marker-app",
-  "version": "1.0.1",
+  "version": "1.0.4",
   "description": "water marker",
   "main": "main.js",
   "author": "Oleksander Bezverkhnii",
   "build": {
-    "appId": "com.watermark.app",
+    "appId": "com.electron.watermarker",
     "productName": "water-marker-app",
     "files": [
-      "**/*",
-      "!settings.json"
+      "**/*"
     ],
-    "asar": "false",
+    "asar": "true",
     "publish": {
         "provider": "github",
         "owner": "shurikoi",

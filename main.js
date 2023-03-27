@@ -109,7 +109,7 @@ const createWindow = () => {
   })
 
   ipcMain.on("process", (event, args) => {
-    win.setProgressBar = -1
+    win.setProgressBar(-1)
     progress = 0
     imgsLength = args.imgs.length
 

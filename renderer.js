@@ -8,18 +8,13 @@ const path = require("path")
 const allowedExtensions = ["jpg", "png"]
 const logo = ["imgs/logo.png", "imgs/logo-en.png", "imgs/logo-white.png"]
 
-let settings
-
-try {
-    settings = require(path.join(__dirname, "settings.json"))
-}catch(err){
-    settings = {
-        isDark: true,
-        path: path.join(os.homedir(), "Downloads"),
-        position: 1,
-        logo: 0
-    }
+let settings = JSON.parse(localStorage.getItem("settings")) || {
+    isDark: true,
+    path: path.join(os.homedir(), "Downloads"),
+    position: 1,
+    logo: 0
 }
+
 let choosenImgs = []
 
 const body = document.querySelector("body")
@@ -36,7 +31,8 @@ const modalWindow = document.querySelector(".modal-window")
 document.querySelector(".file-path").textContent = settings.path
 
 function writeSettings(){
-    fs.writeFile(path.join(__dirname, "settings.json"), JSON.stringify(settings), () => {})
+    localStorage.setItem("settings", JSON.stringify(settings))
+    console.log(JSON.parse(localStorage.getItem("settings")))
 }
 
 function outputImgs(){
