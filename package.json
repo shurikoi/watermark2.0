@@ -7,23 +7,18 @@
   "build": {
     "appId": "com.electron.watermarker",
     "productName": "water-marker-app",
-    "files": [
-      "**/*"
-    ],
-    "asar": "true",
+    "asar": "false",
     "publish": {
-        "provider": "github",
-        "owner": "shurikoi",
-        "repo": "watermark2.0",
-        "releaseType": "release"
-      }
-    ,
+      "provider": "github",
+      "owner": "shurikoi",
+      "repo": "watermark2.0",
+      "releaseType": "release"
+    },
     "nsis": {
-        "allowToChangeInstallationDirectory": "true",
-        "oneClick": "false",
-        "perMachine": "false"
-      }
-    
+      "allowToChangeInstallationDirectory": "true",
+      "oneClick": "false",
+      "perMachine": "true"
+    }
   },
   "scripts": {
     "start": "electron --trace-warnings .",

@@ -1,12 +1,11 @@
-setTimeout(() => document.querySelector(".loader-wrapper").remove(), 300)  
+setTimeout(() => document.querySelector(".loader-wrapper").classList.add("hidden"), 300)  
 
 const { ipcRenderer } = require('electron')
-const fs = require("fs")
 const os = require("os")
 const path = require("path")
 
 const allowedExtensions = ["jpg", "png"]
-const logo = ["imgs/logo.png", "imgs/logo-en.png", "imgs/logo-white.png"]
+const logo = ["logo.png", "logo-en.png", "logo-white.png"]
 
 let settings = JSON.parse(localStorage.getItem("settings")) || {
     isDark: true,
@@ -51,14 +50,13 @@ function outputImgs(){
             const imgWidth = parseInt(window.getComputedStyle(demoImg).getPropertyValue("width"))
             const imgHeight = parseInt(window.getComputedStyle(demoImg).getPropertyValue("height"))
 
-            if (imgWidth > imgHeight)
-                demoLogo.classList.add("vertical")
-            else
-                demoLogo.classList.remove("vertical")
+            demoLogo.style.width = Math.round((imgWidth > imgHeight? imgWidth : imgHeight) / 7.86) + 'px'
         }
     }
     else{
         demoImg.setAttribute("src", "")
+        
+        demoLogo.style.width = "0"
 
         demo.classList.add("demo-border")
         demoImg.classList.remove("demo-border")
@@ -108,7 +106,7 @@ logoInputs.forEach((logoBtn, index) => {
         logoItems[index].classList.add("choosen-logo")
         lastChoosenItem = index
         
-        demoLogo.setAttribute("src", logo[index])
+        demoLogo.setAttribute("src", path.join("imgs", logo[index]))
         settings.logo = index
         writeSettings()
     })
@@ -165,13 +163,6 @@ demo.addEventListener("dragover", (e) => {
 demo.addEventListener("dragleave", (e) => {
     e.preventDefault()
     demo.classList.remove("dragover")
-})
-
-demo.addEventListener("drop", (e) => {
-    e.preventDefault()
-    demo.classList.remove("dragover")
-    demo.style.width = imgWidth + "px"
-    demo.style.height = imgHeight + "px"
 })
 
 document.querySelector(".choose-files").addEventListener("click", () => {

@@ -1,8 +1,14 @@
 const { ipcMain, dialog, app, BrowserWindow } = require('electron')
 const { autoUpdater } = require("electron-updater")
-const sharp = require("sharp")
-const fs = require("fs")
 const path = require("path")
+
+let sharp
+
+try{
+  sharp = require(path.join(__dirname, "..", "app.asar.unpacked", "node_modules", "sharp"))
+}catch(err){
+  sharp = require("sharp")
+}
 
 const createWindow = () => {
   const win = new BrowserWindow({
@@ -18,23 +24,27 @@ const createWindow = () => {
 
   win.loadFile('index.html')
 
+  
   let progress
   let imgsLength
 
   async function compositeImages(img, folder, logo, position) {
     const imgMetaData = await sharp(img).metadata()
-
+    win.webContents.send("console-out", imgMetaData)
     if ((imgMetaData.orientation || 0) >= 5)
       [imgMetaData.width, imgMetaData.height, imgMetaData.orientation] = [imgMetaData.height, imgMetaData.width, 1]
-
+    
     console.log(imgMetaData)
-
+    
     let logoPosition = [0, 0]
     let logoSize = Math.round(((imgMetaData.width > imgMetaData.height)? imgMetaData.width: imgMetaData.height) / 7.86)
+    win.webContents.send("console-out", [logoSize, logo])
 
-    let logoImg = await sharp(path.join(__dirname, logo)).resize({width: logoSize, height: logoSize}).toBuffer()
+    let logoImg = await sharp(logo).resize({width: logoSize, height: logoSize}).toBuffer()
+    win.webContents.send("console-out", [logoImg, logo])
     let logoMetaData = await sharp(logoImg).metadata()
-    
+    win.webContents.send("console-out", logoMetaData)
+
     switch(position){
       case('1'):
         logoPosition = [0, 0]
@@ -45,13 +55,13 @@ const createWindow = () => {
       case('3'):
         logoPosition = [0, imgMetaData.height - logoMetaData.height]
         break
-      case('4'):
+        case('4'):
         logoPosition = [imgMetaData.width - logoMetaData.width, imgMetaData.height - logoMetaData.height]
         break
-    }
-    
-    console.log("position" + logoPosition)
-
+      }
+      
+      console.log("position" + logoPosition)
+      
     await sharp(img).rotate().composite([
       {
         input: logoImg,
@@ -69,17 +79,17 @@ const createWindow = () => {
   autoUpdater.autoInstallOnAppQuit = false
   autoUpdater.autoRunAppAfterInstall = true
   autoUpdater.checkForUpdates()
-
+  
   win.webContents.send("console-out", app.getVersion())
-
+  
   autoUpdater.on("checking-for-update", () => {
     win.webContents.send("console-out", "checking")
   })
-
+  
   autoUpdater.on("update-available", (updateInfo) => {
     win.webContents.send("update-available", updateInfo)
   })
-
+  
   ipcMain.on("start-download", () => {
     autoUpdater.downloadUpdate()
   })
@@ -87,17 +97,17 @@ const createWindow = () => {
   autoUpdater.on("download-progress", (progressInfo) => {
     win.webContents.send("download-progress", progressInfo)
   })
-
+  
   autoUpdater.on("update-downloaded", () => {
     setTimeout(() => {
       autoUpdater.quitAndInstall(true, true)
     }, 1000)
   })
-
+  
   ipcMain.on("choose-files", (event) => {
     dialog.showOpenDialog({ properties: ["openFile", "multiSelections"], filters: [{ name: "Images", extensions: ["jpg", "png"] }] }).then((result) => {
       if (result.filePaths.length > 0)
-        event.sender.send("choosen-files", result.filePaths)
+      event.sender.send("choosen-files", result.filePaths)
     })
   })
 
@@ -105,25 +115,24 @@ const createWindow = () => {
     dialog.showOpenDialog({ properties: ["openDirectory"] }).then((result) => {
       if (result.filePaths.length > 0)
         event.sender.send("folder-path", ...result.filePaths)
+      })
     })
-  })
 
   ipcMain.on("process", (event, args) => {
     win.setProgressBar(-1)
     progress = 0
     imgsLength = args.imgs.length
-
+    
     args.imgs.forEach((img) => {
-      compositeImages(img, args.folder, args.logo, args.position)
+      compositeImages(img, args.folder, path.join(__dirname, "imgs", args.logo), args.position)
     })
-})
-
-  win.on("close", (e) => {
-    win.webContents.send("app-closing")
   })
 }
 
 app.whenReady().then(() => {
+  app.on("window-all-closed", () => {
+    app.exit()
+  })
+
   createWindow()
-  
 })
