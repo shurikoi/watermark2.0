@@ -1,4 +1,4 @@
-const { ipcMain, dialog, app, BrowserWindow } = require('electron')
+const { ipcMain, dialog, app, BrowserWindow, Menu} = require('electron')
 const { autoUpdater } = require("electron-updater")
 const path = require("path")
 
@@ -15,7 +15,8 @@ const createWindow = () => {
     width: 940,
     height: 700,
     resizable: false,
-    title: "watermarks",
+    title: "FRI Logo Maker",
+    icon: 'logo.png',
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false
@@ -24,7 +25,12 @@ const createWindow = () => {
 
   win.loadFile('index.html')
 
-  
+  win.webContents.send("app-version", app.getVersion())
+
+  let menu = Menu.buildFromTemplate([])
+
+  Menu.setApplicationMenu(menu)
+
   let progress
   let imgsLength
 
@@ -72,6 +78,11 @@ const createWindow = () => {
       let progressBarValue = ++progress / imgsLength 
       win.webContents.send("progress", progressBarValue)
       win.setProgressBar(progressBarValue)
+      if (progress == imgsLength)
+        setTimeout(() => {
+          win.setProgressBar(-1)
+          win.webContents.send("process-ended")
+        }, 2000)
     })
     
   }
@@ -79,8 +90,6 @@ const createWindow = () => {
   autoUpdater.autoInstallOnAppQuit = false
   autoUpdater.autoRunAppAfterInstall = true
   autoUpdater.checkForUpdates()
-  
-  win.webContents.send("console-out", app.getVersion())
   
   autoUpdater.on("checking-for-update", () => {
     win.webContents.send("console-out", "checking")

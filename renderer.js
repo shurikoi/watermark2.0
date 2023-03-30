@@ -75,6 +75,10 @@ document.querySelector(".download-btn").addEventListener("click", () => {
 
 let total
 
+ipcRenderer.once("app-version", (event, version) => {
+    document.querySelector(".app-version > span").textContent = version
+})
+
 ipcRenderer.on("update-available", (event, info) => {
     modalWindow.classList.remove("hidden")
     total = info.files.reduce((acc, el) => acc + el.size, 0)
@@ -131,6 +135,12 @@ processBtn.addEventListener("click", () => {
 
         ipcRenderer.on("progress", (event, args) => {
             document.querySelector(".progress-bar").style.width = `${args * 100}%`
+        })
+
+        ipcRenderer.once("process-ended", () => {
+            document.querySelector(".progress-bar").style.width = "0%"
+            choosenImgs = []
+            outputImgs()
         })
 
         ipcRenderer.send("process", {

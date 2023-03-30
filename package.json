@@ -1,12 +1,12 @@
 {
   "name": "water-marker-app",
-  "version": "1.0.4",
-  "description": "water marker",
+  "version": "1.0.5",
+  "description": "FRI Logo Maker",
   "main": "main.js",
   "author": "Oleksander Bezverkhnii",
   "build": {
     "appId": "com.electron.watermarker",
-    "productName": "water-marker-app",
+    "productName": "fri-logo-maker-app",
     "asar": "false",
     "publish": {
       "provider": "github",
@@ -18,6 +18,9 @@
       "allowToChangeInstallationDirectory": "true",
       "oneClick": "false",
       "perMachine": "true"
+    },
+    "win": {
+      "icon": "logo.ico"
     }
   },
   "scripts": {

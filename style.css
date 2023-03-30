@@ -42,6 +42,18 @@ img{
     -webkit-user-drag: none;
 }
 
+.main-info-wrapper{
+    position: absolute;
+    bottom: 40px;
+    right: 20px;
+    color: #969494;
+    font-size: 8px;
+}
+
+.feedback-url > a{
+    color: #969494;
+}
+
 .container {
     display: flex;
     flex-direction: column;
