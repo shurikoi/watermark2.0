@@ -82,7 +82,9 @@ document.querySelector(".download-btn").addEventListener("click", () => {
 
 let total
 
-ipcRenderer.once("app-version", (event, version) => {
+ipcRenderer.send("get-app-version")
+
+ipcRenderer.on("app-version", (event, version) => {
     document.querySelector(".app-version > span").textContent = version
 })
 

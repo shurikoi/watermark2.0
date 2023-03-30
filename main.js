@@ -25,7 +25,10 @@ const createWindow = () => {
 
   win.loadFile('index.html')
 
-  win.webContents.send("app-version", app.getVersion())
+  ipcMain.on("get-app-version", (event) => {
+    event.sender.send("app-version", app.getVersion())
+  })
+
 
   let menu = Menu.buildFromTemplate([])
 
@@ -36,12 +39,10 @@ const createWindow = () => {
 
   async function compositeImages(img, folder, logo, position) {
     const imgMetaData = await sharp(img).metadata()
-    win.webContents.send("console-out", imgMetaData)
+
     if ((imgMetaData.orientation || 0) >= 5)
       [imgMetaData.width, imgMetaData.height, imgMetaData.orientation] = [imgMetaData.height, imgMetaData.width, 1]
-    
-    console.log(imgMetaData)
-    
+
     let logoPosition = [0, 0]
     let logoSize = Math.round(((imgMetaData.width > imgMetaData.height)? imgMetaData.width: imgMetaData.height) / 7.86)
     win.webContents.send("console-out", [logoSize, logo])
