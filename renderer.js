@@ -1,6 +1,6 @@
 setTimeout(() => document.querySelector(".loader-wrapper").classList.add("hidden"), 300)  
 
-const { ipcRenderer } = require('electron')
+const { ipcRenderer, shell } = require('electron')
 const os = require("os")
 const path = require("path")
 
@@ -28,6 +28,13 @@ const logoInputs = document.querySelectorAll("[name=logo]")
 const modalWindow = document.querySelector(".modal-window")
 
 document.querySelector(".file-path").textContent = settings.path
+
+document.querySelectorAll("a[href]").forEach((el) => {
+    el.addEventListener("click", (e) => {
+        e.preventDefault()
+        shell.openExternal(e.target.href)
+    })
+})
 
 function writeSettings(){
     localStorage.setItem("settings", JSON.stringify(settings))

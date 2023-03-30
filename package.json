@@ -16,12 +16,15 @@
     },
     "nsis": {
       "allowToChangeInstallationDirectory": "true",
+      "installerIcon": "icon.ico",
+      "installerHeaderIcon": "icon.ico",
       "oneClick": "false",
       "perMachine": "true"
     },
     "win": {
-      "icon": "logo.ico"
-    }
+      "icon": "icon.ico"
+    },
+    "icon": "icon.ico"
   },
   "scripts": {
     "start": "electron --trace-warnings .",
